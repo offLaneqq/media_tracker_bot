@@ -57,21 +57,21 @@ def register_handlers(dp):
 
         await message.answer(f"Ви вибрали категорію: {message.text}. Оберіть дію нижче.", reply_markup=keyboard)
     
-    @dp.message(lambda msg: msg.text in get_all_actions())
-    async def action_handler(message: Message) -> None:
-        """Обробник дій для категорій"""
-        action = message.text
-        category = get_category_by_action(action)
+    # @dp.message(lambda msg: msg.text in get_all_actions())
+    # async def action_handler(message: Message) -> None:
+    #     """Обробник дій для категорій"""
+    #     action = message.text
+    #     category = get_category_by_action(action)
         
-        if action is not None and action.startswith("Додати"):
-            await message.answer(f"Введіть назву для додавання в категорію '{category}':")
-            # Тут буде логіка очікування введення назви
+    #     if action is not None and action.startswith("Додати"):
+    #         await message.answer(f"Введіть назву для додавання в категорію '{category}':")
+    #         # Тут буде логіка очікування введення назви
             
-        elif action is not None and action.startswith("Редагувати"):
-            await message.answer(f"Функція редагування для категорії '{category}' буде реалізована пізніше.")
+    #     elif action is not None and action.startswith("Редагувати"):
+    #         await message.answer(f"Функція редагування для категорії '{category}' буде реалізована пізніше.")
             
-        elif action is not None and action.startswith("Переглянути список"):
-            await message.answer(f"Список у категорії '{category}': (поки що пустий)")
+    #     elif action is not None and action.startswith("Переглянути список"):
+    #         await message.answer(f"Список у категорії '{category}': (поки що пустий)")
         
     @dp.message(lambda msg: msg.text == "Назад")
     async def back_handler(message: Message) -> None:

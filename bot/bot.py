@@ -15,6 +15,9 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 register_handlers(dp)
 
+from handlers.media import router as media_router
+dp.include_router(media_router)
+
 if __name__ == '__main__':
     print('Starting bot...')
     async def main():

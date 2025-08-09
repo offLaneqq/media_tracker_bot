@@ -6,18 +6,14 @@ import os, sys
 
 from alembic import context
 
-from app import models
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'app'))
 
-# If your models inherit from declarative_base(), set target_metadata accordingly:
-from sqlalchemy.orm import declarative_base
-Base = declarative_base()
-target_metadata = Base.metadata
+from app import models
+from app.database import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'app'))
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 if DATABASE_URL:

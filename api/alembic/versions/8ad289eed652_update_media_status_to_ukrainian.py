@@ -1,8 +1,8 @@
-"""Create media table
+"""update media status to ukrainian
 
-Revision ID: a072fc63135c
-Revises: 
-Create Date: 2025-08-08 10:55:46.882719
+Revision ID: 8ad289eed652
+Revises: b396996bb461
+Create Date: 2025-08-09 13:57:02.345273
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'a072fc63135c'
-down_revision: Union[str, Sequence[str], None] = None
+revision: str = '8ad289eed652'
+down_revision: Union[str, Sequence[str], None] = 'b396996bb461'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
