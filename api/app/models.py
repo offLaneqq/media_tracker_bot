@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Enum, ForeignKey
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import relationship
 import enum
 
 from .database import Base
@@ -10,9 +10,9 @@ class MediaCategory(str, enum.Enum):
     book = "book"
 
 class MediaStatus(str, enum.Enum):
-    planned = "заплановано"
-    watching = "дивлюсь"
-    completed = "переглянуто"
+    planned = "Заплановано"
+    watching = "Дивлюсь"
+    completed = "Переглянуто"
 
 class Media(Base):
     __tablename__ = "media"

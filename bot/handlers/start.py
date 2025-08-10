@@ -4,9 +4,16 @@ from aiogram.types import Message
 from aiogram import html
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 
+# categories = ["Аніме 🍥", "Фільми 🎬", "Книги 📚"]
+categories = ["Аніме", "Фільми", "Книги"]
+
+def get_keyboard(array):
+    return ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text=cat)] for cat in array],
+        resize_keyboard=True
+)
+
 def register_handlers(dp):
-    
-    categories = ["Аніме", "Фільми", "Книги"]
     
     actions = {
             "Аніме": ["Додати аніме", "Редагувати аніме", "Переглянути список аніме", "Назад"],
@@ -14,13 +21,6 @@ def register_handlers(dp):
             "Книги": ["Додати книгу", "Редагувати книгу", "Переглянути список книг", "Назад"]
         }
     
-    
-    def get_keyboard(array):
-        return ReplyKeyboardMarkup(
-            keyboard=[[KeyboardButton(text=cat)] for cat in array],
-            resize_keyboard=True
-    )
-        
     def get_all_actions():
         """Повертає список всіх дій для всіх категорій (крім 'Назад')"""
         all_actions = []
