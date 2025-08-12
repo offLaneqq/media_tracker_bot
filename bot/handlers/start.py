@@ -1,8 +1,8 @@
-
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message
 from aiogram import html
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.fsm.context import FSMContext
 
 # categories = ["Аніме 🍥", "Фільми 🎬", "Книги 📚"]
 categories = ["Аніме", "Фільми", "Книги"]
@@ -49,34 +49,19 @@ def register_handlers(dp):
             reply_markup=keyboard
         )
 
-    @dp.message(lambda msg: msg.text in categories)
-    async def category_handler(message: Message) -> None:
+    # @dp.message(lambda msg: msg.text in categories)
+    # async def category_handler(message: Message) -> None:
         
-        category = message.text if message.text is not None else ""
-        keyboard = get_keyboard(actions.get(category, []))
+        # category = message.text if message.text is not None else ""
+        # keyboard = get_keyboard(actions.get(category, []))
 
-        await message.answer(f"Ви вибрали категорію: {message.text}. Оберіть дію нижче.", reply_markup=keyboard)
-    
-    # @dp.message(lambda msg: msg.text in get_all_actions())
-    # async def action_handler(message: Message) -> None:
-    #     """Обробник дій для категорій"""
-    #     action = message.text
-    #     category = get_category_by_action(action)
-        
-    #     if action is not None and action.startswith("Додати"):
-    #         await message.answer(f"Введіть назву для додавання в категорію '{category}':")
-    #         # Тут буде логіка очікування введення назви
-            
-    #     elif action is not None and action.startswith("Редагувати"):
-    #         await message.answer(f"Функція редагування для категорії '{category}' буде реалізована пізніше.")
-            
-    #     elif action is not None and action.startswith("Переглянути список"):
-    #         await message.answer(f"Список у категорії '{category}': (поки що пустий)")
-        
+        # await message.answer(f"Ви вибрали категорію: {message.text}. Оберіть дію нижче.", reply_markup=keyboard)
+
     @dp.message(lambda msg: msg.text == "Назад")
-    async def back_handler(message: Message) -> None:
+    async def back_handler(message: Message, state: FSMContext) -> None:
         """
         Handler for the "Назад" button to return to category selection
         """
+        await state.clear()  # Додаємо очищення FSM!
         keyboard = get_keyboard(categories)
         await message.answer("Повертаємось до вибору категорії. Оберіть категорію:", reply_markup=keyboard)

@@ -1,5 +1,5 @@
-from pydantic import BaseModel
 from typing import Optional
+from pydantic import BaseModel
 
 class MediaCreate(BaseModel):
     title: str
@@ -14,3 +14,11 @@ class Media(MediaCreate):
 
     class Config:
         from_attributes = True
+
+class MediaUpdate(BaseModel):
+    title: Optional[str] = None
+    category: Optional[str] = None
+    status: Optional[str] = None
+    current_episode: Optional[int] = None
+    user_id: Optional[int] = None
+    username: Optional[str] = None
