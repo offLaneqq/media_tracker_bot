@@ -3,23 +3,9 @@ from aiogram.types import Message
 from aiogram import html
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.fsm.context import FSMContext
-
-# categories = ["Аніме 🍥", "Фільми 🎬", "Книги 📚"]
-categories = ["Аніме", "Фільми", "Книги"]
-
-def get_keyboard(array):
-    return ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text=cat)] for cat in array],
-        resize_keyboard=True
-)
+from .constants import categories, actions, get_keyboard
 
 def register_handlers(dp):
-    
-    actions = {
-            "Аніме": ["Додати аніме", "Редагувати аніме", "Переглянути список аніме", "Назад"],
-            "Фільми": ["Додати фільм", "Редагувати фільм", "Переглянути список фільмів", "Назад"],
-            "Книги": ["Додати книгу", "Редагувати книгу", "Переглянути список книг", "Назад"]
-        }
     
     def get_all_actions():
         """Повертає список всіх дій для всіх категорій (крім 'Назад')"""
@@ -48,14 +34,6 @@ def register_handlers(dp):
             f"Привіт, {user_full_name}! Я Media Tracker Bot. Я готовий до роботи. Оберіть категорію:",
             reply_markup=keyboard
         )
-
-    # @dp.message(lambda msg: msg.text in categories)
-    # async def category_handler(message: Message) -> None:
-        
-        # category = message.text if message.text is not None else ""
-        # keyboard = get_keyboard(actions.get(category, []))
-
-        # await message.answer(f"Ви вибрали категорію: {message.text}. Оберіть дію нижче.", reply_markup=keyboard)
 
     @dp.message(lambda msg: msg.text == "Назад")
     async def back_handler(message: Message, state: FSMContext) -> None:
