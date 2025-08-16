@@ -6,7 +6,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from handlers.start import categories, get_keyboard
+from .constants import categories, get_keyboard
 from typing import Optional
 
 router = Router()

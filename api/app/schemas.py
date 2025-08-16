@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class MediaCreate(BaseModel):
     title: str
-    title_en: str
+    title_en: Optional[str]
     category: str
     status: str
     current_episode: int
