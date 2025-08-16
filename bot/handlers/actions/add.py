@@ -3,7 +3,8 @@ from ..media_shared import MediaForm, valid_statuses, patch_media_to_api_async, 
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from handlers.start import categories, get_keyboard
+from ..constants import categories, get_keyboard
+from ...conf.translation import translate_to_english
 
 router = Router()
 
@@ -19,6 +20,9 @@ async def start_add_anime(message: Message, state: FSMContext):
     
 @router.message(MediaForm.waiting_for_title)
 async def anime_title_entered(message: Message, state: FSMContext):
+    title_uk = message.text if message.text is not None else ""
+    title_en = await translate_to_english(title_uk)
+
     data = await state.get_data()
     # Якщо режим редагування — шукаємо аніме у списку
     if data.get("mode") == "edit":
@@ -29,6 +33,7 @@ async def anime_title_entered(message: Message, state: FSMContext):
             return
         await state.update_data(
             title=selected["title"],
+            title_en=selected.get("title_en", ""),
             id=selected["id"],  # Зберігаємо id для PATCH
             status=selected["status"],
             current_episode=selected["current_episode"]
@@ -45,12 +50,16 @@ async def anime_title_entered(message: Message, state: FSMContext):
             parse_mode="HTML"
         )
     else:
-        await state.update_data(title=message.text)
+        await state.update_data(title=title_uk, title_en=title_en)
         keyboard = ReplyKeyboardMarkup(
             keyboard=[[KeyboardButton(text=status)] for status in valid_statuses] + [[KeyboardButton(text="Назад")]],
             resize_keyboard=True
         )
-        await message.answer("Виберіть статус (Заплановано/Дивлюсь/Переглянуто):", reply_markup=keyboard)
+        await message.answer(
+            f"Ваша назва: <b>{title_uk}</b>\nАнглійською: <b>{title_en}</b>\nВиберіть статус (Заплановано/Дивлюсь/Переглянуто):",
+            reply_markup=keyboard,
+            parse_mode="HTML"
+        )
     await state.set_state(MediaForm.waiting_for_status)
     
 
@@ -88,23 +97,26 @@ async def anime_episode_entered(message: Message, state: FSMContext):
     except ValueError:
         await message.answer("Будь ласка, введіть коректний номер серії.")
         return
-    
+
     user_id = message.from_user.id if message.from_user is not None else None
     media_data = {
         "title": data["title"],
+        "title_en": data.get("title_en", ""),
         "category": "anime",
         "status": data["status"],
         "current_episode": int(message.text),
-        "user_id": user_id,  # або інший спосіб отримати user_id
+        "user_id": user_id,
         "username": message.from_user.username if message.from_user is not None else None,
     }
     try:
         if data.get("mode") == "edit":
             media_data["id"] = data["id"]
-            media_data.pop("user_id", None) 
+            media_data.pop("user_id", None)
+            from ..start import get_keyboard, categories  # <-- імпорт тут!
             await patch_media_to_api_async(media_data)
             await message.answer("Аніме відредаговано! Повертаємось до вибору категорії.", reply_markup=get_keyboard(categories))
         else:
+            from ..start import get_keyboard, categories  # <-- імпорт тут!
             await send_media_to_api_async(media_data)
             await message.answer("Аніме додано! Повертаємось до вибору категорії.", reply_markup=get_keyboard(categories))
     except Exception as e:

@@ -21,6 +21,7 @@ class MediaForm(StatesGroup):
     waiting_for_edit_title = State()
     waiting_for_anime_action = State()
     waiting_for_delete_title = State()
+    waiting_for_import_file = State()
 
 async def get_user_media(user_id: Optional[int]):
     url = f"{os.getenv('API_URL', 'http://api:8000')}/api/media/?telegram_id={user_id}"

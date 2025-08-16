@@ -2,7 +2,7 @@ from aiogram import Router, F
 from ..media_shared import MediaForm, get_user_media
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
-from handlers.start import get_keyboard, categories
+from ..constants import get_keyboard, categories
 import aiohttp
 import os
 

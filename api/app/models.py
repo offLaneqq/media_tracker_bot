@@ -18,6 +18,7 @@ class Media(Base):
     __tablename__ = "media"
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True, nullable=False)
+    title_en = Column(String, index=True, nullable=False)
     category = Column(Enum(MediaCategory), index=True, nullable=False, default=MediaCategory.anime)
     status = Column(Enum(MediaStatus), index=True, nullable=False, default=MediaStatus.planned)
     current_episode = Column(Integer, index=True, nullable=False, default=1)
