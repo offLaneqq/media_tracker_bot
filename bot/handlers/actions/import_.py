@@ -7,13 +7,15 @@ from io import StringIO
 
 router = Router()
 
-@router.message(MediaForm.waiting_for_anime_action, F.text == "Імпортувати аніме")
+
+@router.message(MediaForm.waiting_for_anime_action, F.text == "Імпортувати аніме ⬇️")
 async def import_anime_start(message: types.Message, state: FSMContext):
     await message.answer(
         "Надішліть CSV-файл, експортований з бота або створений вручну. Формат: Назва,Статус,Серія",
         reply_markup=types.ReplyKeyboardRemove()
     )
     await state.set_state(MediaForm.waiting_for_import_file)
+
 
 @router.message(MediaForm.waiting_for_import_file, F.document)
 async def import_anime_file(message: types.Message, state: FSMContext, bot):

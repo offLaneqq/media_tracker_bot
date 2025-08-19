@@ -8,7 +8,7 @@ router = Router()
 
 
 # Хендлер для редагування записів 
-@router.message(MediaForm.waiting_for_anime_action, F.text == "Редагувати аніме")
+@router.message(MediaForm.waiting_for_anime_action, F.text == "Редагувати аніме 🛠")
 async def start_edit_anime(message: Message, state: FSMContext):
     user_id = message.from_user.id if message.from_user is not None else None
     media_list = await get_user_media(user_id)

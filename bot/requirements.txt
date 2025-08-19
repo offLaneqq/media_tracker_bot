@@ -3,3 +3,6 @@ requests
 python-dotenv
 aiohttp
 deepl
+google-generativeai
+httpx
+matplotlib

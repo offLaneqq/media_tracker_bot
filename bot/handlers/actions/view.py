@@ -6,7 +6,8 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 router = Router()
 
-@router.message(MediaForm.waiting_for_anime_action, F.text == "Переглянути список аніме")
+
+@router.message(MediaForm.waiting_for_anime_action, F.text == "Переглянути список аніме 🗂")
 async def show_anime_list(message: Message, state: FSMContext):
     user_id = message.from_user.id if message.from_user is not None else None
     media_list = await get_user_media(user_id)
@@ -16,28 +17,33 @@ async def show_anime_list(message: Message, state: FSMContext):
 
     # Формуємо таблицю з нумерацією та вирівнюванням
     table = "<b>Ваш список аніме:</b>\n\n"
-    table += f"<pre>{'№':<3} {'Назва':<22} {'Статус':<12} {'Серія':<5}\n"
-    table += "-" * 45 + "\n"
+    table += f"<pre>{'№':<2} {'Назва':<22} {'Статус':<11} {'Серія':<3}\n"
+    table += "-" * 41 + "\n"
     for idx, media in enumerate(media_list, 1):
-        table += f"{idx:<3} {media['title'][:20]:<22} {media['status']:<12} {str(media['current_episode']):<5}\n"
+        table += f"{idx:<2} {media['title'][:22]:<22} {media['status']:<11} {str(media['current_episode']):<3}\n"
     table += "</pre>"
     await message.answer(table, parse_mode="HTML")
 
     keyboard = ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text=status)] for status in valid_statuses] + [[KeyboardButton(text="Назад")]],
+        keyboard=[[KeyboardButton(
+            text=status)] for status in valid_statuses] + [[KeyboardButton(text="Назад")]],
         resize_keyboard=True
     )
     await message.answer("Бажаєте переглянути аніме за статусом? Оберіть статус:", reply_markup=keyboard)
     await state.set_state(MediaForm.waiting_for_filter_status)
 
+
 @router.message(F.text == "Переглянути за статусом")
 async def choose_status(message: Message, state: FSMContext):
     keyboard = ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text=status)] for status in valid_statuses] + [[KeyboardButton(text="Назад")]],
+        keyboard=[[KeyboardButton(
+            text=status)] for status in valid_statuses] + [[KeyboardButton(text="Назад")]],
         resize_keyboard=True
     )
     await message.answer("Оберіть статус для перегляду:", reply_markup=keyboard)
-    await state.set_state(MediaForm.waiting_for_filter_status)  # Використовуємо новий стан!
+    # Використовуємо новий стан!
+    await state.set_state(MediaForm.waiting_for_filter_status)
+
 
 @router.message(MediaForm.waiting_for_filter_status)
 async def show_by_status(message: Message, state: FSMContext):

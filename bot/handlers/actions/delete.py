@@ -8,7 +8,7 @@ import os
 
 router = Router()
 
-@router.message(MediaForm.waiting_for_anime_action, F.text == "Видалити аніме")
+@router.message(MediaForm.waiting_for_anime_action, F.text == "Видалити аніме ❌")
 async def start_delete_anime(message: Message, state: FSMContext):
     user_id = message.from_user.id if message.from_user is not None else None
     media_list = await get_user_media(user_id)

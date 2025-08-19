@@ -9,7 +9,7 @@ import zoneinfo
 
 router = Router()
 
-@router.message(MediaForm.waiting_for_anime_action, F.text == "Експортувати аніме")
+@router.message(MediaForm.waiting_for_anime_action, F.text == "Експортувати аніме ⬆️")
 async def export_anime(message: Message, state: FSMContext):
     user_id = message.from_user.id if message.from_user is not None else None
     media_list = await get_user_media(user_id)

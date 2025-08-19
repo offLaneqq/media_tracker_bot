@@ -8,6 +8,7 @@ from aiogram.types import Message
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from .constants import categories, get_keyboard
 from typing import Optional
+import httpx
 
 router = Router()
 
@@ -22,6 +23,7 @@ class MediaForm(StatesGroup):
     waiting_for_anime_action = State()
     waiting_for_delete_title = State()
     waiting_for_import_file = State()
+    waiting_for_title_selection = State()
 
 async def get_user_media(user_id: Optional[int]):
     url = f"{os.getenv('API_URL', 'http://api:8000')}/api/media/?telegram_id={user_id}"
@@ -42,12 +44,15 @@ async def back_to_anime_actions(message: Message, state: FSMContext):
 
 
 # Асинхронна функція для надсилання POST-запиту до API
-async def send_media_to_api_async(media_data: dict):
-    url = f"{os.getenv('API_URL', 'http://api:8000')}/api/media/"
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url, json=media_data) as resp:
-            resp.raise_for_status()
-            return await resp.json()
+async def send_media_to_api_async(media_data):
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post("http://api:8000/api/media/", json=media_data)
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            if exc.response.status_code == 422:
+                raise ValueError("duplicate")
+            raise
         
 # Асинхронна функція для надсилання PATCH-запиту до API
 async def patch_media_to_api_async(media_data: dict):
@@ -89,5 +94,11 @@ async def handle_status_entered(message, state, is_edit=False):
             await send_media_to_api_async(media_data)
             await message.answer("Аніме додано! Повертаємось до вибору категорії.", reply_markup=get_keyboard(categories))
     except Exception as e:
-        await message.answer(f"Сталася помилка: {e}")
+        if str(e) == "duplicate":
+            await message.answer(
+                "❗️ Це аніме вже є у вашому списку!\n\nПовертаємось до головного меню.",
+                reply_markup=get_keyboard(categories)
+            )
+        else:
+            await message.answer(f"Сталася помилка: {e}")
     await state.clear()
